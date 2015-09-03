@@ -11,12 +11,14 @@ import com.isa.security.ISCertSecurityManager;
 import com.isa.token.HandlerToken;
 import com.isa.token.Token;
 import com.isa.utiles.IdGenerator;
+import com.isa.utiles.StreamDataSource;
 import com.isa.utiles.Utiles;
 import com.isa.utiles.UtilesResources;
+import com.isa.utiles.UtilesWS;
+import com.isa.ws.STR;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.Rectangle;
-import com.itextpdf.text.pdf.PdfAnnotation;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfSignatureAppearance;
 import com.itextpdf.text.pdf.PdfStamper;
@@ -29,9 +31,6 @@ import com.itextpdf.text.pdf.security.PrivateKeySignature;
 import java.awt.Color;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -41,7 +40,6 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.UnrecoverableKeyException;
-import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
@@ -49,8 +47,9 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFileChooser;
-import org.apache.commons.codec.binary.Base64;
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import netscape.javascript.JSObject;
 
 /**
  *
@@ -72,6 +71,9 @@ public class PrototipoPAdES extends javax.swing.JApplet {
     private KeyStore keystore;  
     private String certIndex;
     private String password;
+    private String cedula;
+    private Integer solnumero;
+    private Integer anio;
     
     /**
      * Initializes the applet PrototipoPAdES
@@ -103,16 +105,18 @@ public class PrototipoPAdES extends javax.swing.JApplet {
 
         /* Create and display the applet */
         try {
-            initComponents();
             SecurityManager sm = new ISCertSecurityManager();
             System.setSecurityManager(sm);
+            initComponents();
             initAppletComponents();
             initAliasHashCerts();
             KeyStoreValidator.setInitStoreValidator();
-            UtilesResources.setRutaProperties("http://localhost:8082/ISCertDemo1/resources/hacienda/applet.properties");
-            //UtilesResources.setRutaProperties(getParameter("ruta"));
+            UtilesResources.setRutaProperties(getParameter("ruta"));
+            cedula = getParameter("cedula");
+//          UtilesResources.setRutaProperties("http://localhost:8080/ISCertDemo1/resources/hacienda/applet.properties");
+//          cedula = "2015";
+//          setSize(480, 520);            
             sincronizarTokens();
-            setSize(480, 520);
 
             if (!handler.isTokenActivo()){
                 msjLogin.setText("Debe conectar un token.");
@@ -128,6 +132,7 @@ public class PrototipoPAdES extends javax.swing.JApplet {
     private void initAppletComponents(){
         mensaje.setVisible(false);
         msjLogin.setVisible(false);
+        botonFirmar.setVisible(false);
     }
     
     private void initAliasHashCerts(){
@@ -199,21 +204,14 @@ public class PrototipoPAdES extends javax.swing.JApplet {
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         lista = new javax.swing.JTable();
-        jPanel3 = new javax.swing.JPanel();
-        jButton3 = new javax.swing.JButton();
-        mensaje = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jPasswordField1 = new javax.swing.JPasswordField();
         jLabel4 = new javax.swing.JLabel();
         jButton5 = new javax.swing.JButton();
         msjLogin = new javax.swing.JLabel();
+        mensaje = new javax.swing.JLabel();
+        botonFirmar = new javax.swing.JButton();
 
         javax.swing.GroupLayout jFrame1Layout = new javax.swing.GroupLayout(jFrame1.getContentPane());
         jFrame1.getContentPane().setLayout(jFrame1Layout);
@@ -260,94 +258,6 @@ public class PrototipoPAdES extends javax.swing.JApplet {
         );
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 170, 450, -1));
-
-        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Firma"));
-
-        jButton3.setText("Firmar");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
-            }
-        });
-
-        mensaje.setText("Mensaje");
-
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
-            }
-        });
-
-        jButton2.setText("Selección");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
-            }
-        });
-
-        jButton1.setText("Selección");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
-        jLabel2.setText("Destino");
-
-        jLabel1.setText("Origen");
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(23, 23, 23)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(mensaje, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField1)
-                            .addComponent(jTextField2))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap())
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addGap(23, 23, 23)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1)
-                    .addComponent(jButton1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(mensaje, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
-        );
-
-        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 340, 450, 170));
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Autenticación Token"));
 
@@ -415,6 +325,17 @@ public class PrototipoPAdES extends javax.swing.JApplet {
 
         jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 450, 150));
 
+        mensaje.setText("Mensaje");
+        jPanel1.add(mensaje, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 310, 430, 25));
+
+        botonFirmar.setText("Firmar");
+        botonFirmar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonFirmarActionPerformed(evt);
+            }
+        });
+        jPanel1.add(botonFirmar, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 340, 110, -1));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -423,66 +344,11 @@ public class PrototipoPAdES extends javax.swing.JApplet {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 515, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 378, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        try {
-            
-            if (lista.getSelectedRow() == -1){
-                mensajeError("Seleccionar un certificado!");
-                return;
-            }
-            
-            seleccionarCertificado();
-            String pdfbase64 = Utiles.encodeFileToBase64Binary( jTextField1.getText() );
-            String alias = (String) aliasHash.get(certIndex);
-             
-            PAdESFirma infofirma = new PAdESFirma();
-            infofirma.setPk( (PrivateKey) keystore.getKey(alias, null) );
-            infofirma.setChainCert( keystore.getCertificateChain(alias) );
-            infofirma.setProvidername( keystore.getProvider().getName() );
-            
-            //Definiendo apariencia de firma.
-            infofirma.setFirmante(alias);
-            infofirma.setTextoFirma(alias);
-            infofirma.setApariencia(UtilesResources.getProperty(UtilesResources.PROP_APARIENCIA).equals(UtilesResources.TRUE_VALUE));
-            
-            if (infofirma.isApariencia()){
-                infofirma.setHoja( Integer.valueOf( UtilesResources.getProperty(UtilesResources.PROP_PAG_FIRMA)) );
-                infofirma.setPosicionVertical(UtilesResources.getProperty(UtilesResources.PROP_POS_VERTICAL));
-                infofirma.setAncho( Integer.valueOf(UtilesResources.getProperty(UtilesResources.PROP_ANCHO_FIRMA)) );
-                infofirma.setLargo( Integer.valueOf(UtilesResources.getProperty(UtilesResources.PROP_LARGO_FIRMA)) );
-                infofirma.setRutaImagen( UtilesResources.getProperty(UtilesResources.PROP_URL_IMAGEN) );
-            }
-            String pdffirmado = firmar(infofirma, pdfbase64 );   
-            pdfbase64 = null;
-            if (pdffirmado  == null){
-                mensajeError();
-            }
-            else{
-                guardarPdf(jTextField2.getText(), pdffirmado);
-                mensajeOK();
-            }       
-        }
-        catch (IOException ex) {    
-            mensajeError();
-            Logger.getLogger(PrototipoPAdES.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (KeyStoreException ex) {
-            mensajeError();
-            Logger.getLogger(PrototipoPAdES.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NoSuchAlgorithmException ex) {
-            mensajeError();
-            Logger.getLogger(PrototipoPAdES.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UnrecoverableKeyException ex) {
-            mensajeError();
-            Logger.getLogger(PrototipoPAdES.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_jButton3ActionPerformed
-
+    /*
     private void mensajeError(){
         System.out.println("Error firmado PDF.");
         mensaje.setText("Error firmando documento!!!");
@@ -501,50 +367,22 @@ public class PrototipoPAdES extends javax.swing.JApplet {
         mensaje.setForeground(Color.black);
         mensaje.setText("Documento firmando.");
         mensaje.setVisible(true); 
+    }*/
+    
+    private void mostrarMensaje( String msj){
+        mensaje.setForeground(Color.BLACK);
+        mensaje.setText(msj);
+        mensaje.setVisible(true);
+    }
+    
+    private void ocultarMensaje(){
+        mensaje.setVisible(false);
     }
     
     private void seleccionarCertificado(){
         certIndex = String.valueOf( lista.getSelectedRow() );
     }
     
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
-
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-        JFileChooser chooser = new JFileChooser();
-        int status = chooser.showSaveDialog(jPanel1);
-        if(status == JFileChooser.APPROVE_OPTION){
-            File saveFile = chooser.getSelectedFile();
-            String savePath = saveFile.getAbsolutePath();
-            jTextField1.setText(savePath);
-        }else{
-            jTextField1.setText("");
-        }        
-        
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-        
-        // TODO add your handling code here:
-        JFileChooser chooser = new JFileChooser();
-        int status = chooser.showSaveDialog(jPanel1);
-        if(status == JFileChooser.APPROVE_OPTION){
-            File saveFile = chooser.getSelectedFile();
-            String savePath = saveFile.getAbsolutePath();
-            jTextField2.setText(savePath);
-        }else{
-            jTextField2.setText("");
-        }         
-        
-    }//GEN-LAST:event_jButton2ActionPerformed
-
     private void jPasswordField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jPasswordField1ActionPerformed
@@ -560,7 +398,7 @@ public class PrototipoPAdES extends javax.swing.JApplet {
                 msjLogin.setForeground(Color.RED);
                 return;
             }
-            
+            initAliasHashCerts();
             cargarCertificados( pass );
             
         } catch (KeyStoreException ex) {
@@ -574,6 +412,13 @@ public class PrototipoPAdES extends javax.swing.JApplet {
         }
     }//GEN-LAST:event_jButton5ActionPerformed
 
+    private void botonFirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonFirmarActionPerformed
+        // TODO add your handling code here:
+        
+        firmarPDF("46422", "2015");
+    }//GEN-LAST:event_botonFirmarActionPerformed
+
+    /*
     public void guardarPdf(String destino, String pdfbase64){
         try {
             byte[] bytes = com.itextpdf.text.pdf.codec.Base64.decode(pdfbase64);
@@ -591,17 +436,115 @@ public class PrototipoPAdES extends javax.swing.JApplet {
             Logger.getLogger(PrototipoPAdES.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    */
     
     public boolean validarPDF( String pdf ){
        return false;
     }
     
-    public String firmar(PAdESFirma infoFirma, String pdfbase64 ){
+    
+    /**
+     * Firma pdf from javascript.
+     * @param pNumero
+     * @param pAnio
+     * @return 
+     */
+    public void firmarPDF( String pNumero, String pAnio ){ 
+        
+        this.solnumero = Integer.valueOf( pNumero );
+        this.anio = Integer.valueOf( pAnio );
+        if (lista.getSelectedRow() == -1){
+            firmarError("Debe seleccionar un certificado.");
+            return;
+        }
+        Thread thread = new Thread(){
+            @Override
+            public void run(){
+                try{
+                    seleccionarCertificado();
+                    STR str = obtenerSTRFromWS(solnumero, anio, cedula);
+                    PAdESFirma infoFirma = generarApariencia();
+
+                    ByteArrayOutputStream pdfOS = firmar(infoFirma, str.getObjetoPdf().getInputStream());
+                    InputStream pdfIS = new ByteArrayInputStream( pdfOS.toByteArray() );
+                    
+                    // Return the InputStream to the client.
+                    DataSource ds = new StreamDataSource( pdfIS, pdfOS );
+                    DataHandler dh = new DataHandler(ds);
+                    str.setObjetoPdf(dh);
+                    guardarPDF(str);
+
+                    ocultarMensaje();
+                    firmaExitosa("Se ha firmado el documento: " + solnumero);  
+                } 
+                catch (IOException ex) {
+                    Logger.getLogger(PrototipoPAdES.class.getName()).log(Level.SEVERE, null, ex);
+                    firmarError( "Error firmando documento: " + solnumero );
+                } 
+                catch (KeyStoreException ex) {
+                    Logger.getLogger(PrototipoPAdES.class.getName()).log(Level.SEVERE, null, ex);
+                    firmarError( "Error firmando documento: " + solnumero );
+                } 
+                catch (NoSuchAlgorithmException ex) {
+                    Logger.getLogger(PrototipoPAdES.class.getName()).log(Level.SEVERE, null, ex);
+                    firmarError( "Error firmando documento: " + solnumero );
+                } 
+                catch (UnrecoverableKeyException ex) {
+                    Logger.getLogger(PrototipoPAdES.class.getName()).log(Level.SEVERE, null, ex);
+                    firmarError( "Error firmando documento: " + solnumero );
+                }                        
+            }
+        };
+        thread.start();
+        mostrarMensaje("Firmando documento: " + solnumero);
+  
+    }
+    
+    public PAdESFirma generarApariencia(  ) throws IOException, KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException{
+            
+        String alias = (String) aliasHash.get(certIndex);
+            
+        PAdESFirma infofirma = new PAdESFirma();
+        infofirma.setPk( (PrivateKey) keystore.getKey(alias, null) );
+        infofirma.setChainCert( keystore.getCertificateChain(alias) );
+        infofirma.setProvidername( keystore.getProvider().getName() );
+
+        //Definiendo apariencia de firma.
+        infofirma.setFirmante(alias);
+        infofirma.setTextoFirma(alias);
+        infofirma.setApariencia(UtilesResources.getProperty(UtilesResources.PROP_APARIENCIA).equals(UtilesResources.TRUE_VALUE));
+
+        if (infofirma.isApariencia()){
+            infofirma.setHoja( Integer.valueOf( UtilesResources.getProperty(UtilesResources.PROP_PAG_FIRMA)) );
+            infofirma.setPosicionVertical(UtilesResources.getProperty(UtilesResources.PROP_POS_VERTICAL));
+            infofirma.setAncho( Integer.valueOf(UtilesResources.getProperty(UtilesResources.PROP_ANCHO_FIRMA)) );
+            infofirma.setLargo( Integer.valueOf(UtilesResources.getProperty(UtilesResources.PROP_LARGO_FIRMA)) );
+            infofirma.setRutaImagen( UtilesResources.getProperty(UtilesResources.PROP_URL_IMAGEN) );
+        }
+        return infofirma;
+    }
+    
+    
+    public STR obtenerSTRFromWS( Integer solnumero, Integer anio, String cedula ) throws IOException{
+        
+        STR str = UtilesWS.getInstancePortWS().obtenerPdfParaFirma(solnumero, anio, cedula);
+        
+        return str;
+    }
+    
+    public int guardarPDF( STR str ) throws IOException{
+        
+        int codigoresponse = UtilesWS.getInstancePortWS().guardarPdfFirmado(str, cedula);
+        
+        return codigoresponse;
+    }
+
+    
+    
+    public ByteArrayOutputStream firmar(PAdESFirma infoFirma, InputStream pdfbase64 ){
         
         try {
-            byte[] decodedBytes = Base64.decodeBase64(pdfbase64.getBytes());
-            InputStream is = new ByteArrayInputStream(decodedBytes);
-            PdfReader reader = new PdfReader(is);
+            PdfReader reader = new PdfReader( pdfbase64 );
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             PdfStamper stamper = PdfStamper.createSignature(reader, os, '\0', null, true);
             PdfSignatureAppearance appearance = stamper.getSignatureAppearance();
@@ -623,13 +566,10 @@ public class PrototipoPAdES extends javax.swing.JApplet {
             ExternalSignature es = new PrivateKeySignature(infoFirma.getPk(), "SHA-256", infoFirma.getProvidername());
             ExternalDigest digest = new BouncyCastleDigest();
             MakeSignature.signDetached(appearance, digest, es, infoFirma.getChainCert(), null, null, null, 0, CryptoStandard.CMS);
-
-            byte[] datasigned = os.toByteArray();
-            String pdffirmado = Base64.encodeBase64String(datasigned);
-            
+           
             System.out.println("PDF Firmado correctamente.");
             
-            return pdffirmado;
+            return os;
             
         } catch (IOException ex) {
             Logger.getLogger(PrototipoPAdES.class.getName()).log(Level.SEVERE, null, ex);
@@ -654,6 +594,17 @@ public class PrototipoPAdES extends javax.swing.JApplet {
             return null;
         }
     }
+    
+    private void firmarError(String msg){
+        JSObject win = (JSObject) JSObject.getWindow(this);
+        win.call("firmaError", new String[]{  msg });        
+    }
+    
+    private void firmaExitosa( String msj ){  
+        JSObject win = (JSObject) JSObject.getWindow(this);
+        win.call("firmaExitosa", new String[]{  msj } );   
+    }
+    
     /*
     public void test(){
         try {
@@ -737,43 +688,19 @@ public class PrototipoPAdES extends javax.swing.JApplet {
         }        
     }*/
     
-    public void addAnnotation(String src, String dest) throws IOException, DocumentException {
-        PdfReader reader = new PdfReader(src);
-        PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(dest), '\0', true);
-        PdfAnnotation comment = PdfAnnotation.createText(stamper.getWriter(),
-        new Rectangle(200, 800, 250, 820), "Se ha firmado correctamente!", "Juan ha firmado este documento.", true, "Comment");
-        stamper.addAnnotation(comment, 1);
-        stamper.close();
-    }    
-    
-    public void addWrongAnnotation(String src, String dest) throws IOException, DocumentException {
-        PdfReader reader = new PdfReader(src);
-        PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(dest));
-        PdfAnnotation comment = PdfAnnotation.createText(stamper.getWriter(), new Rectangle(200, 800, 250, 820), "Firma inválida", "Se ha invalidado la firma", true, "Comment");
-        stamper.addAnnotation(comment, 1);
-        stamper.close();
-    }
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton botonFirmar;
     private javax.swing.JButton jButton5;
     private javax.swing.JFileChooser jFileChooser1;
     private javax.swing.JFrame jFrame1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
     private javax.swing.JTable lista;
     private javax.swing.JLabel mensaje;
     private javax.swing.JLabel msjLogin;

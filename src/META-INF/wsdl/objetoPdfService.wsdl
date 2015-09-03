@@ -1,0 +1,97 @@
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions name="STRFirmaDigitalService" targetNamespace="http://str.siaf.hacienda.gov.py/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://str.siaf.hacienda.gov.py/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <wsdl:types>
+<xs:schema elementFormDefault="unqualified" targetNamespace="http://str.siaf.hacienda.gov.py/" version="1.0" xmlns:tns="http://str.siaf.hacienda.gov.py/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:element name="guardarPdfFirmado" type="tns:guardarPdfFirmado"/>
+<xs:element name="guardarPdfFirmadoResponse" type="tns:guardarPdfFirmadoResponse"/>
+<xs:element name="obtenerPdfParaFirma" type="tns:obtenerPdfParaFirma"/>
+<xs:element name="obtenerPdfParaFirmaResponse" type="tns:obtenerPdfParaFirmaResponse"/>
+<xs:complexType name="obtenerPdfParaFirma">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="solNumero" type="xs:int"/>
+      <xs:element minOccurs="0" name="anio" type="xs:int"/>
+      <xs:element minOccurs="0" name="cedulaFirmante" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="obtenerPdfParaFirmaResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="resultPdfParaFirma" type="tns:STR"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="STR">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="anio" type="xs:int"/>
+      <xs:element minOccurs="0" name="estadoFirma" type="xs:int"/>
+      <xs:element minOccurs="0" name="objetoPdf" ns1:expectedContentTypes="application/pdf" type="xs:base64Binary" xmlns:ns1="http://www.w3.org/2005/05/xmlmime"/>
+      <xs:element minOccurs="0" name="solNumero" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="guardarPdfFirmado">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="postFirmado" type="tns:STR"/>
+      <xs:element minOccurs="0" name="cedulaFirmante" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="guardarPdfFirmadoResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="resultPdfFirmado" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="guardarPdfFirmadoResponse">
+    <wsdl:part element="tns:guardarPdfFirmadoResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="obtenerPdfParaFirma">
+    <wsdl:part element="tns:obtenerPdfParaFirma" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="guardarPdfFirmado">
+    <wsdl:part element="tns:guardarPdfFirmado" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="obtenerPdfParaFirmaResponse">
+    <wsdl:part element="tns:obtenerPdfParaFirmaResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="STRFirmaDigitalEndPoint">
+    <wsdl:operation name="obtenerPdfParaFirma">
+      <wsdl:input message="tns:obtenerPdfParaFirma" name="obtenerPdfParaFirma">
+    </wsdl:input>
+      <wsdl:output message="tns:obtenerPdfParaFirmaResponse" name="obtenerPdfParaFirmaResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="guardarPdfFirmado">
+      <wsdl:input message="tns:guardarPdfFirmado" name="guardarPdfFirmado">
+    </wsdl:input>
+      <wsdl:output message="tns:guardarPdfFirmadoResponse" name="guardarPdfFirmadoResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="STRFirmaDigitalServiceSoapBinding" type="tns:STRFirmaDigitalEndPoint">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="obtenerPdfParaFirma">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="obtenerPdfParaFirma">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="obtenerPdfParaFirmaResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="guardarPdfFirmado">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="guardarPdfFirmado">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="guardarPdfFirmadoResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="STRFirmaDigitalService">
+    <wsdl:port binding="tns:STRFirmaDigitalServiceSoapBinding" name="STRFirmaDigitalEndPointPort">
+      <soap:address location="http://localhost:8080/str/objetoPdfService"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

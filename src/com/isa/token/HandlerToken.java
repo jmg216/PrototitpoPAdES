@@ -5,6 +5,7 @@ package com.isa.token;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+import com.isa.plataform.OSValidator;
 import com.isa.utiles.Utiles;
 import com.isa.utiles.UtilesResources;
 import java.io.IOException;
@@ -13,7 +14,6 @@ import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.security.auth.login.LoginException;
-import signerISCert.plataform.OSValidator;
 
 /**
  *

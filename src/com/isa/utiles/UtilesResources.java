@@ -53,6 +53,11 @@ public class UtilesResources {
     public static final String PROP_INIT_IZQ_Y = "appletConfig.CoordsInitAbajoIzqY";
     public static final String PROP_MODO_FIRMA = "appletConfig.ModoFirma";
     
+    public static final String PROP_WS_ENDPOINT = "appletConfig.WSEndpoint";
+    public static final String PROP_WS_AUTH = "appletConfig.WSAutenticacion";
+    public static final String PROP_WS_USER = "appletConfig.WSUser";    
+    public static final String PROP_WS_PASSWD = "appletConfig.WSPasswd";    
+    
             
    
     private static UtilesResources instance;
