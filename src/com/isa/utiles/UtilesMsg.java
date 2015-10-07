@@ -11,15 +11,15 @@ package com.isa.utiles;
  */
 public class UtilesMsg {
     
-    
+    public static String PROCESANDO_FIRMA = "Se está procesando la firma del documento...";
+    public static String PROCESANDO_VALIDACION = "Se está procesando la validación del documento...";
     public static String DOC_FIRMADO_OK = "Se ha firmado correctamente el documento.";
     public static String PENDIENTE = "Usted no tiene ningún certificado instalado.";
     public static String ERROR_FIRMAR_DOC = "Ha ocurrido un error y no se ha podido firmar el documento.";
     public static String ERROR_PIN_INCORRECTO = "El pin no es correcto.";
     public static String ERROR_TOKEN_BLOQUEADO = "El token se ha bloquedo.";
     public static String ERROR_TOKEN_SIN_IDENTIFICAR = "No se puede identificar el token.";
-    public static String PROCESANDO_FIRMA = "Procesando firma...";
-    public static String FIRMA_VERIFICADA_OK = "Firma verificada correctamente.";
+    public static String FIRMA_VERIFICADA_OK = "Firma/s validada/s correctamente.";
     public static String VALIDANDO_DOCUMENTO = "Validando documento...";
     public static String ERROR_FIRMA_NO_VALIDA = "La firma no es válida.";
     public static String ERROR_UNA_FIRMA_NO_VALIDA = "Una o más firmas en el documento no son válidas.";

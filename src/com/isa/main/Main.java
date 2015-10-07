@@ -150,8 +150,9 @@ public class Main extends javax.swing.JApplet implements ICommon{
                     
                     
                     if (isValidar()){
-                        ManejadorPaneles.showPanelMessageInfo( UtilesMsg.VALIDANDO_DOCUMENTO );
-                        firmapdfcontroller.validarFirma( pdfOS.toByteArray() );                        
+                        ManejadorPaneles.showPanelProcesando(UtilesMsg.PROCESANDO_VALIDACION );
+                        firmapdfcontroller.validarFirma( pdfOS.toByteArray() );             
+                        ManejadorPaneles.showPanelMessageInfo( UtilesMsg.FIRMA_VERIFICADA_OK );
                     }
                     else{
                         ManejadorPaneles.showPanelMessageInfo( UtilesMsg.DOC_FIRMADO_OK );
@@ -215,7 +216,7 @@ public class Main extends javax.swing.JApplet implements ICommon{
         String tipoDocumento = requestPdfWs.getParametroValue(RequestPdfWS.TIPO_DOCUMENTO);
         String anio = requestPdfWs.getParametroExtraValue(RequestPdfWS.ANIO);
         String solnumero = requestPdfWs.getParametroExtraValue(RequestPdfWS.SOLNUMERO);
-        ManejadorPaneles.showPanelProcesando(tipoDocumento , solnumero, anio);
+        ManejadorPaneles.showPanelProcesando(UtilesMsg.PROCESANDO_FIRMA, tipoDocumento , solnumero, anio);
         
     }
     

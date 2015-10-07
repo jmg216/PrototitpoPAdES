@@ -78,16 +78,26 @@ public class ManejadorPaneles {
         cl.show( cards, MensajeJPanel.class.getName() );
     }   
     
-    public static void showPanelProcesando( String tipodoc, String nro, String anio){
+    public static void showPanelProcesando(String titulo, String tipodoc, String nro, String anio){
         JPanel panel = getPanel(ProcesandoJPanel.class.getName());
         ProcesandoJPanel procJpanel = (ProcesandoJPanel) panel;
         procJpanel.getAnioText().setText(anio);
         procJpanel.getNroText().setText(nro);
         procJpanel.getTipoText().setText(tipodoc);
+        procJpanel.getTitulo().setText(titulo);
         
         CardLayout cl = (CardLayout)(cards.getLayout());
         cl.show( cards, ProcesandoJPanel.class.getName() );
     }
+    
+    public static void showPanelProcesando(String titulo){
+        JPanel panel = getPanel(ProcesandoJPanel.class.getName());
+        ProcesandoJPanel procJpanel = (ProcesandoJPanel) panel;
+        procJpanel.getTitulo().setText(titulo);
+        
+        CardLayout cl = (CardLayout)(cards.getLayout());
+        cl.show( cards, ProcesandoJPanel.class.getName() );
+    }    
     
     public static JPanel getPanel(String nombre){
         
