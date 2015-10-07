@@ -1,0 +1,130 @@
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions name="VerificarDocumentoPDFService" targetNamespace="http://services.ws.isa.com/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://services.ws.isa.com/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <wsdl:types>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://services.ws.isa.com/" xmlns:tns="http://services.ws.isa.com/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="validarDocumentoByDoc" type="tns:validarDocumentoByDoc"/>
+  <xs:element name="validarDocumentoByDocResponse" type="tns:validarDocumentoByDocResponse"/>
+  <xs:element name="validarDocumentoByParams" type="tns:validarDocumentoByParams"/>
+  <xs:element name="validarDocumentoByParamsResponse" type="tns:validarDocumentoByParamsResponse"/>
+  <xs:complexType name="validarDocumentoByDoc">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:base64Binary"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="validarDocumentoByDocResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:verifyResponse"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="verifyResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="signatures" nillable="true" type="tns:signature"/>
+      <xs:element name="valida" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="signature">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="fecha" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="singer" type="xs:string"/>
+      <xs:element name="verify" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="validarDocumentoByParams">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="arg1" type="tns:campoTipoValor"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="campoTipoValor">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="campo" type="xs:string"/>
+      <xs:element minOccurs="0" name="tipo" type="tns:tipoDato"/>
+      <xs:element minOccurs="0" name="valor" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tipoDato">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="validarDocumentoByParamsResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:verifyResponse"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="WService_TXException" type="tns:WService_TXException"/>
+  <xs:complexType name="WService_TXException">
+    <xs:sequence>
+      <xs:element name="mensaje" nillable="true" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="validarDocumentoByParams">
+    <wsdl:part element="tns:validarDocumentoByParams" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="validarDocumentoByParamsResponse">
+    <wsdl:part element="tns:validarDocumentoByParamsResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="validarDocumentoByDocResponse">
+    <wsdl:part element="tns:validarDocumentoByDocResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="WService_TXException">
+    <wsdl:part element="tns:WService_TXException" name="WService_TXException">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="validarDocumentoByDoc">
+    <wsdl:part element="tns:validarDocumentoByDoc" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="VerificarDocumentoPDF">
+    <wsdl:operation name="validarDocumentoByDoc">
+      <wsdl:input message="tns:validarDocumentoByDoc" name="validarDocumentoByDoc">
+    </wsdl:input>
+      <wsdl:output message="tns:validarDocumentoByDocResponse" name="validarDocumentoByDocResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:WService_TXException" name="WService_TXException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="validarDocumentoByParams">
+      <wsdl:input message="tns:validarDocumentoByParams" name="validarDocumentoByParams">
+    </wsdl:input>
+      <wsdl:output message="tns:validarDocumentoByParamsResponse" name="validarDocumentoByParamsResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:WService_TXException" name="WService_TXException">
+    </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="VerificarDocumentoPDFServiceSoapBinding" type="tns:VerificarDocumentoPDF">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="validarDocumentoByDoc">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="validarDocumentoByDoc">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="validarDocumentoByDocResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="WService_TXException">
+        <soap:fault name="WService_TXException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="validarDocumentoByParams">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="validarDocumentoByParams">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="validarDocumentoByParamsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="WService_TXException">
+        <soap:fault name="WService_TXException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="VerificarDocumentoPDFService">
+    <wsdl:port binding="tns:VerificarDocumentoPDFServiceSoapBinding" name="VerificarDocumentoPDFPort">
+      <soap:address location="http://localhost:8080/WService_TX/VerificarDocumentoPDF"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

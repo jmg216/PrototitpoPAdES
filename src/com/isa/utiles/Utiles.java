@@ -55,6 +55,7 @@ public class Utiles {
     public static String PKCS11_EXCEPTION_CKR_PIN_LEN_RANGE = "CKR_PIN_LEN_RANGE";
     public static String PKCS11_EXCEPTION_CKR_TOKEN_NOT_RECOGNIZED = "CKR_TOKEN_NOT_RECOGNIZED";
     
+    public static String TRUE_VALUE = "true";
     public static String PARAM_TIPO_FIRMA = "tipoFirma";
     public static String VALUE_TIPO_FIRMA_PKCS7 = "pkcs7";
     public static String VALUE_TIPO_FIRMA_XADES_ENVELOPING = "xades";
@@ -82,6 +83,82 @@ public class Utiles {
         return "";
     }
     
+    
+    public static String getCI( String nombre ){
+        String[] arr = nombre.split(",");
+        for ( int i = 0; i < arr.length; i++ ){
+            if( arr[i].startsWith(" SERIALNUMBER=") || arr[i].startsWith("SERIALNUMBER=")){
+                
+                String serialnumber = arr[i].split("=")[1];
+                String cedula = "";
+                if (serialnumber.startsWith("CI ")){
+                    cedula = serialnumber.replace("CI ", "");
+                }
+                else if (serialnumber.startsWith("CI")){
+                    cedula = serialnumber.replace("CI", "");
+                }
+                return cedula;
+            }
+        }
+        return "";
+    }
+    
+    
+    public static String getCIE( String nombre ){
+        String[] arr = nombre.split(",");
+        for ( int i = 0; i < arr.length; i++ ){
+            if( arr[i].startsWith(" SERIALNUMBER=") || arr[i].startsWith("SERIALNUMBER=")){
+                
+                String serialnumber = arr[i].split("=")[1];
+                String cedula = "";
+                if (serialnumber.startsWith("CIE ")){
+                    cedula = serialnumber.replace("CIE ", "");
+                }
+                else if (serialnumber.startsWith("CIE")){
+                    cedula = serialnumber.replace("CIE", "");
+                }
+                return cedula;
+            }
+        }
+        return "";
+    }    
+    
+    public static String getPSP( String nombre ){
+        String[] arr = nombre.split(",");
+        for ( int i = 0; i < arr.length; i++ ){
+            if( arr[i].startsWith(" SERIALNUMBER=") || arr[i].startsWith("SERIALNUMBER=")){
+                
+                String serialnumber = arr[i].split("=")[1];
+                String cedula = "";
+                if (serialnumber.startsWith("PSP ")){
+                    cedula = serialnumber.replace("PSP ", "");
+                }
+                else if (serialnumber.startsWith("PSP")){
+                    cedula = serialnumber.replace("PSP", "");
+                }
+                return cedula;
+            }
+        }
+        return "";
+    }    
+    
+    public static String getDocIDSerialNumber( String dn ){
+            
+        String ciUserCert = Utiles.getCI( dn );
+        String cieUserCert = Utiles.getCIE( dn );
+        String pspUserCert = Utiles.getPSP( dn );
+        
+        if (!Utiles.isNullOrEmpty(ciUserCert)){
+            return ciUserCert;
+        }
+        else if (!Utiles.isNullOrEmpty(cieUserCert)){
+            return cieUserCert;
+        }
+        else if (!Utiles.isNullOrEmpty(pspUserCert)){
+            return pspUserCert;
+        }
+        return null;
+    }
     
     /**
      * Método que retorna un nombre distintivo de un usuario

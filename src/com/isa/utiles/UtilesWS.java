@@ -5,11 +5,14 @@
  */
 package com.isa.utiles;
 
-import com.isa.ws.STRFirmaDigitalEndPoint;
-import com.isa.ws.STRFirmaDigitalService;
+import com.isa.ws.services.VerificarDocumentoPDF;
+import com.isa.ws.services.VerificarDocumentoPDFService;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import javax.xml.ws.BindingProvider;
+import py.gov.hacienda.digital.doc.DocumentoFirmaDigitalEndPoint;
+import py.gov.hacienda.digital.doc.DocumentoFirmaDigitalService;
 
 /**
  *
@@ -17,16 +20,16 @@ import javax.xml.ws.BindingProvider;
  */
 public class UtilesWS {
     
-    private static STRFirmaDigitalEndPoint port = null;
+    private static DocumentoFirmaDigitalEndPoint port = null;
+    private static VerificarDocumentoPDF portV = null;
+    public static int CODIGO_RESPUESTA_ERROR = -1; 
+    public static int CODIGO_RESPUESTA_OK = 1;
     
-    
-    private UtilesWS(){}
-    
-    public static STRFirmaDigitalEndPoint getInstancePortWS() throws IOException{
+    public static DocumentoFirmaDigitalEndPoint getInstancePortWS() throws IOException{
         if (port == null){
             URL wsdllocation = new URL(UtilesResources.getProperty(UtilesResources.PROP_WS_ENDPOINT));
-            STRFirmaDigitalService serviceRes = new STRFirmaDigitalService( wsdllocation );
-            port = serviceRes.getSTRFirmaDigitalEndPointPort();
+            DocumentoFirmaDigitalService serviceRes = new DocumentoFirmaDigitalService( wsdllocation );
+            port = serviceRes.getDocumentoFirmaDigitalEndPointPort();
             BindingProvider bindingProvider = (BindingProvider) port; 
 //          bindingProvider.getRequestContext().put( BindingProvider.ENDPOINT_ADDRESS_PROPERTY, UtilesResources.getProperty(UtilesResources.PROP_WS_ENDPOINT) );
             if (UtilesResources.TRUE_VALUE.equals(UtilesResources.getProperty(UtilesResources.PROP_WS_AUTH))){
@@ -35,6 +38,15 @@ public class UtilesWS {
             }
         }
         return port;
+    }
+    
+    public static VerificarDocumentoPDF getInstancePortWSVerify() throws MalformedURLException, IOException{
+        if (portV == null){
+            URL wsdllocation = new URL(UtilesResources.getProperty(UtilesResources.PROP_WS_ENDPOINT_VALIDACION));
+            VerificarDocumentoPDFService verifyservice = new VerificarDocumentoPDFService( wsdllocation );
+            portV = verifyservice.getVerificarDocumentoPDFPort();
+        }
+        return portV;
     }
     
 }

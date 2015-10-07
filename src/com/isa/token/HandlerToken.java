@@ -5,8 +5,10 @@ package com.isa.token;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+import com.isa.exception.AppletException;
 import com.isa.plataform.OSValidator;
 import com.isa.utiles.Utiles;
+import com.isa.utiles.UtilesMsg;
 import com.isa.utiles.UtilesResources;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,8 +28,9 @@ public class HandlerToken {
     /**
      * Carga todos los tokens configurados en la pc del usuario. 
      * 
+     * @throws com.isa.exception.AppletException
      */
-    public HandlerToken()  {
+    public HandlerToken() throws AppletException   {
         try{
             tokens = new ArrayList();
 
@@ -48,10 +51,10 @@ public class HandlerToken {
                 Token token = new Token(modulosStr[i], librStr[i]);
                 tokens.add(token);
             }
-        } 
-        catch (IOException ex) {
-            Logger.getLogger(HandlerToken.class.getName()).log(Level.SEVERE, null, ex);
-        }        
+        }
+        catch( IOException e ){
+            throw new AppletException(UtilesMsg.ERROR_ACCEDIENDO_ARCHIVO, null, e.getCause());
+        }
     } 
 
     public ArrayList<Token> getTokens() {

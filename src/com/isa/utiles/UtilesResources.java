@@ -44,7 +44,6 @@ public class UtilesResources {
     public static final String PROP_URL_IMAGEN = "appletConfig.URLImagen";
     public static final String PROP_APARIENCIA = "appletConfig.Apariencia";
     public static final String PROP_PAG_FIRMA = "appletConfig.PaginaFirma";
-    public static final String PROP_POS_VERTICAL = "appletConfig.PosicionVertical";
     public static final String PROP_ANCHO_FIRMA = "appletConfig.TamanioRecuadroAncho";
     public static final String PROP_LARGO_FIRMA = "appletConfig.TamanioRecuadroLargo";
     public static final String PROP_ESPACIO_FIRMAS = "appletConfig.EspacioHorizontalEntreFirmas";
@@ -57,6 +56,8 @@ public class UtilesResources {
     public static final String PROP_WS_AUTH = "appletConfig.WSAutenticacion";
     public static final String PROP_WS_USER = "appletConfig.WSUser";    
     public static final String PROP_WS_PASSWD = "appletConfig.WSPasswd";    
+    
+    public static final String PROP_WS_ENDPOINT_VALIDACION = "appletConfig.WSEndpointValidacion";
     
             
    
@@ -83,7 +84,7 @@ public class UtilesResources {
     }
      
     public static String getProperty(String key) throws IOException{
-        return getInstance().getProperties().getProperty(key);
+        return getInstance().getProperties().getProperty(key).trim();
     }
     
     private Properties getProperties(){

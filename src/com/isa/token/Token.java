@@ -6,7 +6,9 @@ package com.isa.token;
  * and open the template in the editor.
  */
 
+import com.isa.exception.AppletException;
 import com.isa.utiles.Utiles;
+import com.isa.utiles.UtilesMsg;
 import com.isa.utiles.UtilesResources;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -51,7 +53,7 @@ public class Token {
     }
     
     
-    public Token(String module, String library)  {
+    public Token(String module, String library) throws AppletException  {
         
         this.module = module;
         this.library = library;
@@ -75,14 +77,17 @@ public class Token {
         catch(ProviderException ex){
             Logger.getLogger(Token.class.getName()).log(Level.SEVERE, null, ex);
             activo = false;            
+            throw new AppletException(UtilesMsg.ERROR_ACCEDIENDO_PROVEEDOR, null, ex.getCause());
         }
         catch(KeyStoreException ex){
             Logger.getLogger(Token.class.getName()).log(Level.SEVERE, null, ex);
-            activo = false;            
+            activo = false;    
+            throw new AppletException(UtilesMsg.ERROR_ACCEDIENDO_TOKEN, null, ex.getCause());
         }
         catch(IOException ex){
             Logger.getLogger(Token.class.getName()).log(Level.SEVERE, null, ex);
-            activo = false;            
+            activo = false;  
+            throw new AppletException(UtilesMsg.ERROR_ACCEDIENDO_ARCHIVO, null, ex.getCause());
         }     
     }   
     

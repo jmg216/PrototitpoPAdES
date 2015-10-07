@@ -15,7 +15,7 @@ import java.security.cert.Certificate;
  *
  * @author JMiraballes
  */
-public class PAdESFirma {
+public class PDFFirma {
 
     private PrivateKey pk;
     private Certificate[] chainCert;
@@ -27,7 +27,6 @@ public class PAdESFirma {
     private boolean apariencia;
     private String textoFirma;
     private int hoja;
-    private String posicionVertical;
     private int largo;
     private int ancho;
 
@@ -93,14 +92,6 @@ public class PAdESFirma {
 
     public void setHoja(int hoja) {
         this.hoja = hoja;
-    }
-
-    public String getPosicionVertical() {
-        return posicionVertical;
-    }
-
-    public void setPosicionVertical(String posicionVertical) {
-        this.posicionVertical = posicionVertical;
     }
 
     public int getLargo() {

@@ -3,9 +3,9 @@
   <services/>
   <clients>
     <client name="objetoPdfService">
-      <wsdl-url>file:/C:/Users/JMiraballes/Documents/Proyectos/Hacienda/wsdl/objetoPdfService.wsdl</wsdl-url>
+      <wsdl-url>file:/C:/Users/JMiraballes/Documents/Proyectos/Hacienda/wsdl/version6/objetoPdfService.wsdl</wsdl-url>
       <local-wsdl-file>objetoPdfService.wsdl</local-wsdl-file>
-      <package-name forceReplace="true">com.isa.ws</package-name>
+      <package-name>py.gov.hacienda.digital.doc</package-name>
       <catalog-file>catalog.xml</catalog-file>
       <wsimport-options>
         <wsimport-option>
@@ -22,7 +22,7 @@
         </wsimport-option>
         <wsimport-option>
           <wsimport-option-name>wsdlLocation</wsimport-option-name>
-          <wsimport-option-value>file:/C:/Users/JMiraballes/Documents/Proyectos/Hacienda/wsdl/objetoPdfService.wsdl</wsimport-option-value>
+          <wsimport-option-value>file:/C:/Users/JMiraballes/Documents/Proyectos/Hacienda/wsdl/version6/objetoPdfService.wsdl</wsimport-option-value>
         </wsimport-option>
         <wsimport-option>
           <wsimport-option-name>xnocompile</wsimport-option-name>
@@ -32,9 +32,37 @@
           <wsimport-option-name>xendorsed</wsimport-option-name>
           <wsimport-option-value>true</wsimport-option-value>
         </wsimport-option>
+      </wsimport-options>
+    </client>
+    <client name="VerificarDocumentoPDFService">
+      <wsdl-url>file:/C:/Users/JMiraballes/Documents/Proyectos/Hacienda/wsdl/validacion2/VerificarDocumentoPDFService.wsdl</wsdl-url>
+      <local-wsdl-file>VerificarDocumentoPDFService.wsdl</local-wsdl-file>
+      <package-name>com.isa.ws.services</package-name>
+      <catalog-file>catalog.xml</catalog-file>
+      <wsimport-options>
         <wsimport-option>
-          <wsimport-option-name>package</wsimport-option-name>
-          <wsimport-option-value>com.isa.ws</wsimport-option-value>
+          <wsimport-option-name>extension</wsimport-option-name>
+          <wsimport-option-value>true</wsimport-option-value>
+        </wsimport-option>
+        <wsimport-option>
+          <wsimport-option-name>verbose</wsimport-option-name>
+          <wsimport-option-value>true</wsimport-option-value>
+        </wsimport-option>
+        <wsimport-option>
+          <wsimport-option-name>fork</wsimport-option-name>
+          <wsimport-option-value>false</wsimport-option-value>
+        </wsimport-option>
+        <wsimport-option>
+          <wsimport-option-name>wsdlLocation</wsimport-option-name>
+          <wsimport-option-value>file:/C:/Users/JMiraballes/Documents/Proyectos/Hacienda/wsdl/validacion2/VerificarDocumentoPDFService.wsdl</wsimport-option-value>
+        </wsimport-option>
+        <wsimport-option>
+          <wsimport-option-name>xnocompile</wsimport-option-name>
+          <wsimport-option-value>true</wsimport-option-value>
+        </wsimport-option>
+        <wsimport-option>
+          <wsimport-option-name>xendorsed</wsimport-option-name>
+          <wsimport-option-value>true</wsimport-option-value>
         </wsimport-option>
       </wsimport-options>
     </client>

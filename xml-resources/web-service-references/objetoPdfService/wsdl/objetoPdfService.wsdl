@@ -1,84 +1,137 @@
-<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions name="STRFirmaDigitalService" targetNamespace="http://str.siaf.hacienda.gov.py/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://str.siaf.hacienda.gov.py/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="DocumentoFirmaDigitalService" targetNamespace="http://doc.digital.hacienda.gov.py/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://doc.digital.hacienda.gov.py/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <wsdl:types>
-<xs:schema elementFormDefault="unqualified" targetNamespace="http://str.siaf.hacienda.gov.py/" version="1.0" xmlns:tns="http://str.siaf.hacienda.gov.py/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-<xs:element name="guardarPdfFirmado" type="tns:guardarPdfFirmado"/>
-<xs:element name="guardarPdfFirmadoResponse" type="tns:guardarPdfFirmadoResponse"/>
-<xs:element name="obtenerPdfParaFirma" type="tns:obtenerPdfParaFirma"/>
-<xs:element name="obtenerPdfParaFirmaResponse" type="tns:obtenerPdfParaFirmaResponse"/>
-<xs:complexType name="obtenerPdfParaFirma">
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://doc.digital.hacienda.gov.py/" xmlns:tns="http://doc.digital.hacienda.gov.py/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="guardarPdfFirmado" type="tns:guardarPdfFirmado"/>
+  <xs:element name="guardarPdfFirmadoResponse" type="tns:guardarPdfFirmadoResponse"/>
+  <xs:element name="obtenerPdfParaFirma" type="tns:obtenerPdfParaFirma"/>
+  <xs:element name="obtenerPdfParaFirmaResponse" type="tns:obtenerPdfParaFirmaResponse"/>
+  <xs:element name="obtenerPdfParaValidar" type="tns:obtenerPdfParaValidar"/>
+  <xs:element name="obtenerPdfParaValidarResponse" type="tns:obtenerPdfParaValidarResponse"/>
+  <xs:complexType name="guardarPdfFirmado">
     <xs:sequence>
-      <xs:element minOccurs="0" name="solNumero" type="xs:int"/>
-      <xs:element minOccurs="0" name="anio" type="xs:int"/>
+      <xs:element minOccurs="0" name="postFirmado" type="tns:documentoElectronico"/>
       <xs:element minOccurs="0" name="cedulaFirmante" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
-<xs:complexType name="obtenerPdfParaFirmaResponse">
+  <xs:complexType name="documentoElectronico">
     <xs:sequence>
-      <xs:element minOccurs="0" name="resultPdfParaFirma" type="tns:STR"/>
+      <xs:element name="objetoPdf" ns1:expectedContentTypes="application/pdf" type="xs:base64Binary" xmlns:ns1="http://www.w3.org/2005/05/xmlmime"/>
+      <xs:element maxOccurs="unbounded" name="parametros" type="xs:anyType"/>
+      <xs:element name="tipoDocumento" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
-<xs:complexType name="STR">
+  <xs:complexType name="guardarPdfFirmadoResponse">
     <xs:sequence>
-      <xs:element minOccurs="0" name="anio" type="xs:int"/>
-      <xs:element minOccurs="0" name="estadoFirma" type="xs:int"/>
-      <xs:element minOccurs="0" name="objetoPdf" ns1:expectedContentTypes="application/pdf" type="xs:base64Binary" xmlns:ns1="http://www.w3.org/2005/05/xmlmime"/>
-      <xs:element minOccurs="0" name="solNumero" type="xs:int"/>
+      <xs:element minOccurs="0" name="resultPdfFirmado" type="tns:resultOperacion"/>
     </xs:sequence>
   </xs:complexType>
-<xs:complexType name="guardarPdfFirmado">
+  <xs:complexType name="resultOperacion">
     <xs:sequence>
-      <xs:element minOccurs="0" name="postFirmado" type="tns:STR"/>
+      <xs:element minOccurs="0" name="codigo" type="xs:int"/>
+      <xs:element minOccurs="0" name="msg" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="obtenerPdfParaValidar">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="tipoDocumento" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="listaParametros" type="tns:campoTipoValor"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="campoTipoValor">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="campo" type="xs:string"/>
+      <xs:element minOccurs="0" name="tipo" type="tns:tipoDato"/>
+      <xs:element minOccurs="0" name="valor" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="obtenerPdfParaValidarResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="resultPdfParaValidar" type="tns:documentoElectronico"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="obtenerPdfParaFirma">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="tipoDocumento" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="listaParametros" type="tns:campoTipoValor"/>
       <xs:element minOccurs="0" name="cedulaFirmante" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
-<xs:complexType name="guardarPdfFirmadoResponse">
+  <xs:complexType name="obtenerPdfParaFirmaResponse">
     <xs:sequence>
-      <xs:element minOccurs="0" name="resultPdfFirmado" type="xs:int"/>
+      <xs:element minOccurs="0" name="resultPdfParaFirma" type="tns:documentoElectronico"/>
     </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="tipoDato">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="INTEGER"/>
+      <xs:enumeration value="LONG"/>
+      <xs:enumeration value="STRING"/>
+      <xs:enumeration value="DATE"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="WsException" type="tns:WsException"/>
+  <xs:complexType name="WsException">
+    <xs:sequence/>
   </xs:complexType>
 </xs:schema>
   </wsdl:types>
-  <wsdl:message name="guardarPdfFirmadoResponse">
-    <wsdl:part element="tns:guardarPdfFirmadoResponse" name="parameters">
+  <wsdl:message name="obtenerPdfParaValidar">
+    <wsdl:part element="tns:obtenerPdfParaValidar" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="obtenerPdfParaFirma">
-    <wsdl:part element="tns:obtenerPdfParaFirma" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="guardarPdfFirmado">
-    <wsdl:part element="tns:guardarPdfFirmado" name="parameters">
+  <wsdl:message name="obtenerPdfParaValidarResponse">
+    <wsdl:part element="tns:obtenerPdfParaValidarResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="obtenerPdfParaFirmaResponse">
     <wsdl:part element="tns:obtenerPdfParaFirmaResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:portType name="STRFirmaDigitalEndPoint">
-    <wsdl:operation name="obtenerPdfParaFirma">
-      <wsdl:input message="tns:obtenerPdfParaFirma" name="obtenerPdfParaFirma">
-    </wsdl:input>
-      <wsdl:output message="tns:obtenerPdfParaFirmaResponse" name="obtenerPdfParaFirmaResponse">
-    </wsdl:output>
-    </wsdl:operation>
+  <wsdl:message name="WsException">
+    <wsdl:part element="tns:WsException" name="WsException">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="guardarPdfFirmado">
+    <wsdl:part element="tns:guardarPdfFirmado" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="obtenerPdfParaFirma">
+    <wsdl:part element="tns:obtenerPdfParaFirma" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="guardarPdfFirmadoResponse">
+    <wsdl:part element="tns:guardarPdfFirmadoResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="DocumentoFirmaDigitalEndPoint">
     <wsdl:operation name="guardarPdfFirmado">
       <wsdl:input message="tns:guardarPdfFirmado" name="guardarPdfFirmado">
     </wsdl:input>
       <wsdl:output message="tns:guardarPdfFirmadoResponse" name="guardarPdfFirmadoResponse">
     </wsdl:output>
+      <wsdl:fault message="tns:WsException" name="WsException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="obtenerPdfParaValidar">
+      <wsdl:input message="tns:obtenerPdfParaValidar" name="obtenerPdfParaValidar">
+    </wsdl:input>
+      <wsdl:output message="tns:obtenerPdfParaValidarResponse" name="obtenerPdfParaValidarResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:WsException" name="WsException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="obtenerPdfParaFirma">
+      <wsdl:input message="tns:obtenerPdfParaFirma" name="obtenerPdfParaFirma">
+    </wsdl:input>
+      <wsdl:output message="tns:obtenerPdfParaFirmaResponse" name="obtenerPdfParaFirmaResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:WsException" name="WsException">
+    </wsdl:fault>
     </wsdl:operation>
   </wsdl:portType>
-  <wsdl:binding name="STRFirmaDigitalServiceSoapBinding" type="tns:STRFirmaDigitalEndPoint">
+  <wsdl:binding name="DocumentoFirmaDigitalServiceSoapBinding" type="tns:DocumentoFirmaDigitalEndPoint">
     <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
-    <wsdl:operation name="obtenerPdfParaFirma">
-      <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="obtenerPdfParaFirma">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="obtenerPdfParaFirmaResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-    </wsdl:operation>
     <wsdl:operation name="guardarPdfFirmado">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="guardarPdfFirmado">
@@ -87,11 +140,38 @@
       <wsdl:output name="guardarPdfFirmadoResponse">
         <soap:body use="literal"/>
       </wsdl:output>
+      <wsdl:fault name="WsException">
+        <soap:fault name="WsException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="obtenerPdfParaValidar">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="obtenerPdfParaValidar">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="obtenerPdfParaValidarResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="WsException">
+        <soap:fault name="WsException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="obtenerPdfParaFirma">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="obtenerPdfParaFirma">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="obtenerPdfParaFirmaResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="WsException">
+        <soap:fault name="WsException" use="literal"/>
+      </wsdl:fault>
     </wsdl:operation>
   </wsdl:binding>
-  <wsdl:service name="STRFirmaDigitalService">
-    <wsdl:port binding="tns:STRFirmaDigitalServiceSoapBinding" name="STRFirmaDigitalEndPointPort">
-      <soap:address location="http://localhost:8080/str/objetoPdfService"/>
+  <wsdl:service name="DocumentoFirmaDigitalService">
+    <wsdl:port binding="tns:DocumentoFirmaDigitalServiceSoapBinding" name="DocumentoFirmaDigitalEndPointPort">
+      <soap:address location="http://localhost:8080/doc/objetoPdfService"/>
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

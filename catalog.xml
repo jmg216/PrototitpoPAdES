@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
     <system systemId="file:/C:/Users/JMiraballes/Documents/Proyectos/Hacienda/wsdl/objetoPdfService.wsdl" uri="xml-resources/web-service-references/objetoPdfService/wsdl/objetoPdfService.wsdl"/>
+    <system systemId="file:/C:/Users/JMiraballes/Documents/Proyectos/Hacienda/wsdl/version3/objetoPdfService.wsdl" uri="xml-resources/web-service-references/objetoPdfService/wsdl/objetoPdfService.wsdl"/>
+    <system systemId="file:/C:/Users/JMiraballes/Documents/Proyectos/Hacienda/wsdl/version4/objetoPdfService.wsdl" uri="xml-resources/web-service-references/objetoPdfService/wsdl/objetoPdfService.wsdl"/>
+    <system systemId="file:/C:/Users/JMiraballes/Documents/Proyectos/Hacienda/wsdl/version5/objetoPdfService_revisado_para_futuro.wsdl" uri="xml-resources/web-service-references/objetoPdfService_revisado_para_futuro/wsdl/objetoPdfService_revisado_para_futuro.wsdl"/>
+    <system systemId="file:/C:/Users/JMiraballes/Documents/Proyectos/Hacienda/wsdl/validacion/VerificarDocumentoPDFService.wsdl" uri="xml-resources/web-service-references/VerificarDocumentoPDFService/wsdl/VerificarDocumentoPDFService.wsdl"/>
+    <system systemId="file:/C:/Users/JMiraballes/Desktop/VerificarDocumentoPDFService.wsdl" uri="xml-resources/web-service-references/VerificarDocumentoPDFService/wsdl/VerificarDocumentoPDFService.wsdl"/>
+    <system systemId="file:/C:/Users/JMiraballes/Documents/Proyectos/Hacienda/wsdl/version6/objetoPdfService.wsdl" uri="xml-resources/web-service-references/objetoPdfService/wsdl/objetoPdfService.wsdl"/>
+    <system systemId="file:/C:/Users/JMiraballes/Documents/Proyectos/Hacienda/wsdl/validacion2/VerificarDocumentoPDFService.wsdl" uri="xml-resources/web-service-references/VerificarDocumentoPDFService/wsdl/VerificarDocumentoPDFService.wsdl"/>
 </catalog>
