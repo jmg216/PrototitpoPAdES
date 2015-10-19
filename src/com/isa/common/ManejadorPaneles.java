@@ -6,6 +6,7 @@
 package com.isa.common;
 
 import com.isa.front.ListaCertsJPanel;
+import com.isa.front.LoginJPanel;
 import com.isa.front.MensajeJPanel;
 import com.isa.front.ProcesandoJPanel;
 import com.itextpdf.text.Font;
@@ -37,6 +38,7 @@ public class ManejadorPaneles {
     
     public static void init(){
         cards = new JPanel(new CardLayout());
+        manejadorPaneles = new ManejadorPaneles();
     }
     
     public static void addPanel( JPanel jpanel, String nombre ){
@@ -65,6 +67,12 @@ public class ManejadorPaneles {
         
         CardLayout cl = (CardLayout)(cards.getLayout());
         cl.show( cards, MensajeJPanel.class.getName() );
+    }
+    
+    public static void showPanelMessagePinError( String msg ){
+        JPanel panel = getPanel(LoginJPanel.class.getName());
+        LoginJPanel loginpanel = (LoginJPanel) panel;
+        loginpanel.mostrarMensajeError(msg);
     }
     
     public static void showPanelMessageInfo( String msg ){

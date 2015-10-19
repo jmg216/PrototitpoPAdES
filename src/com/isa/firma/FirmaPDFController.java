@@ -30,6 +30,7 @@ import com.itextpdf.text.pdf.security.ExternalSignature;
 import com.itextpdf.text.pdf.security.MakeSignature;
 import com.itextpdf.text.pdf.security.MakeSignature.CryptoStandard;
 import com.itextpdf.text.pdf.security.PrivateKeySignature;
+import com.itextpdf.xmp.impl.Base64;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,9 +40,15 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.UnrecoverableKeyException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 import py.gov.hacienda.digital.doc.DocumentoElectronico;
 import py.gov.hacienda.digital.doc.ResultOperacion;
 import py.gov.hacienda.digital.doc.WsException_Exception;
@@ -68,7 +75,7 @@ public class FirmaPDFController {
         try {
             DocumentoElectronico dElectronico = null;
             String tipoDocumento = requestPdfWs.getParametroValue(RequestPdfWS.TIPO_DOCUMENTO);
-            dElectronico = UtilesWS.getInstancePortWS().obtenerPdfParaFirma(tipoDocumento, requestPdfWs.getParametros(), requestPdfWs.getCedula());
+            dElectronico = UtilesWS.getInstancePortWS().obtenerPdfParaFirma(tipoDocumento, requestPdfWs.getParametrosExtra(), requestPdfWs.getCedula());
             
             return dElectronico;
         } 
@@ -76,26 +83,24 @@ public class FirmaPDFController {
             Logger.getLogger(FirmaPDFController.class.getName()).log(Level.SEVERE, null, ex);
             throw new AppletException( UtilesMsg.ERROR_WS_EXCEPTION, null, ex.getCause() );
         } 
-        catch (IOException ex) {
-            Logger.getLogger(FirmaPDFController.class.getName()).log(Level.SEVERE, null, ex);
-            throw new AppletException( UtilesMsg.ERROR_ACCEDIENDO_ARCHIVO, null, ex.getCause() );
-        } 
     }
     
     public ResultOperacion guardarPDFWS( DocumentoElectronico dElectronico, String cedula ) throws AppletException{
         ResultOperacion resultOpeation = null;
         try {
-            resultOpeation = UtilesWS.getInstancePortWS().guardarPdfFirmado(dElectronico, cedula);
+            GregorianCalendar gcal =  (GregorianCalendar) GregorianCalendar.getInstance();
+            XMLGregorianCalendar xgcal = DatatypeFactory.newInstance().newXMLGregorianCalendar( gcal );
+            resultOpeation = UtilesWS.getInstancePortWS().guardarPdfFirmado(dElectronico, cedula, xgcal);
             
             return resultOpeation;
         } 
         catch (WsException_Exception ex) {
             Logger.getLogger(FirmaPDFController.class.getName()).log(Level.SEVERE, null, ex);
             throw new AppletException( UtilesMsg.ERROR_WS_EXCEPTION, null, ex.getCause() );
-        } 
-        catch (IOException ex) {
+        } catch (DatatypeConfigurationException ex) {
+            System.out.println("Se generó un error instanciando XMLGregorianCalendar");
             Logger.getLogger(FirmaPDFController.class.getName()).log(Level.SEVERE, null, ex);
-            throw new AppletException( UtilesMsg.ERROR_ACCEDIENDO_ARCHIVO, null, ex.getCause() );
+            throw new AppletException( UtilesMsg.ERROR_PARSING_CALENDAR, null, ex.getCause() );
         }       
     }  
     
@@ -209,16 +214,14 @@ public class FirmaPDFController {
         
         try{
             VerificarDocumentoPDF verificarpdf = UtilesWS.getInstancePortWSVerify();
-            VerifyResponse response = verificarpdf.validarDocumentoByDoc( pdffirmado );
+            byte[] pdfbase64firmando = Base64.encode(pdffirmado);
+            VerifyResponse response = verificarpdf.validarDocumentoByDoc( pdfbase64firmando );
             if (!response.isValida()){
                 //String msj, String stacktrace, Throwable cause
                 throw new AppletException(UtilesMsg.ERROR_UNA_FIRMA_NO_VALIDA, null, null);
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(FirmaPDFController.class.getName()).log(Level.SEVERE, null, ex);
-            throw new AppletException(UtilesMsg.ERROR_ACCEDIENDO_ARCHIVO, null, ex.getCause());
-            
-        } catch (WServiceTXException_Exception ex) {
+            }   
+        } 
+        catch (WServiceTXException_Exception ex) {
             Logger.getLogger(FirmaPDFController.class.getName()).log(Level.SEVERE, null, ex);
             throw new AppletException(UtilesMsg.ERROR_WS_EXCEPTION_VALIDACION, null, ex.getCause());
         }

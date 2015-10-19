@@ -179,7 +179,7 @@ public class LoginJPanel extends javax.swing.JPanel implements ICommon{
     }//GEN-LAST:event_jButton1ActionPerformed
 
     
-    private void mostrarMensajeError( String mensaje ){
+    public void mostrarMensajeError( String mensaje ){
         msjLogin.setText( mensaje );
         msjLogin.setVisible(true);
         msjLogin.setForeground(Color.RED); 

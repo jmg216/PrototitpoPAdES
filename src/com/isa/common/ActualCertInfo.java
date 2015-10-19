@@ -19,7 +19,7 @@ public class ActualCertInfo {
     private String password;
     private HashMap aliasHash;
     private HashMap certs;
-    private int certIndex;
+    private Integer certIndex;
     private String cedula;
 
     public String getCedula() {
@@ -67,11 +67,11 @@ public class ActualCertInfo {
         this.certs = certs;
     }
 
-    public int getCertIndex() {
+    public Integer getCertIndex() {
         return certIndex;
     }
 
-    public void setCertIndex(int certIndex) {
+    public void setCertIndex(Integer certIndex) {
         this.certIndex = certIndex;
     }
 
@@ -90,7 +90,7 @@ public class ActualCertInfo {
         cedula = null;
         certs = new HashMap();
         aliasHash = new HashMap();
-        certIndex = -1;   
+        certIndex = null;   
     }
   
     

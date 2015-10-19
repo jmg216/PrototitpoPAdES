@@ -16,27 +16,10 @@
             <classpath path="${libs.jaxws21.classpath}"/>
         </taskdef>
     </target>
-    <target name="wsimport-client-objetoPdfService" depends="wsimport-init">
-        <mkdir dir="${build.generated.dir}/jax-wsCache/objetoPdfService"/>
-        <property name="wsdl-objetoPdfService" location="xml-resources/web-service-references/objetoPdfService/wsdl/objetoPdfService.wsdl"/>
-        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/objetoPdfService" destdir="${build.generated.dir}/jax-wsCache/objetoPdfService" wsdl="${wsdl-objetoPdfService}" catalog="catalog.xml" encoding="${source.encoding}" extension="true" verbose="true" fork="false" wsdlLocation="file:/C:/Users/JMiraballes/Documents/Proyectos/Hacienda/wsdl/version6/objetoPdfService.wsdl" xnocompile="true" xendorsed="true">
-            <depends file="${wsdl-objetoPdfService}"/>
-            <produces dir="${build.generated.dir}/jax-wsCache/objetoPdfService"/>
-        </wsimport>
-        <copy todir="${build.generated.sources.dir}/jax-ws">
-            <fileset dir="${build.generated.dir}/jax-wsCache/objetoPdfService">
-                <include name="**/*.java"/>
-            </fileset>
-        </copy>
-    </target>
-    <target name="wsimport-client-clean-objetoPdfService" depends="-init-project">
-        <delete dir="${build.generated.dir}/jax-wsCache/objetoPdfService"/>
-        <delete dir="${build.generated.sources.dir}/jax-ws/py/gov/hacienda/digital/doc"/>
-    </target>
     <target name="wsimport-client-VerificarDocumentoPDFService" depends="wsimport-init">
         <mkdir dir="${build.generated.dir}/jax-wsCache/VerificarDocumentoPDFService"/>
         <property name="wsdl-VerificarDocumentoPDFService" location="xml-resources/web-service-references/VerificarDocumentoPDFService/wsdl/VerificarDocumentoPDFService.wsdl"/>
-        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/VerificarDocumentoPDFService" destdir="${build.generated.dir}/jax-wsCache/VerificarDocumentoPDFService" wsdl="${wsdl-VerificarDocumentoPDFService}" catalog="catalog.xml" encoding="${source.encoding}" extension="true" verbose="true" fork="false" wsdlLocation="file:/C:/Users/JMiraballes/Documents/Proyectos/Hacienda/wsdl/validacion2/VerificarDocumentoPDFService.wsdl" xnocompile="true" xendorsed="true">
+        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/VerificarDocumentoPDFService" destdir="${build.generated.dir}/jax-wsCache/VerificarDocumentoPDFService" wsdl="${wsdl-VerificarDocumentoPDFService}" catalog="catalog.xml" encoding="${source.encoding}" extension="true" verbose="true" fork="false" wsdlLocation="file:/C:/Users/JMiraballes/Desktop/VerificarDocumentoPDFService.wsdl" xnocompile="true" xendorsed="true">
             <depends file="${wsdl-VerificarDocumentoPDFService}"/>
             <produces dir="${build.generated.dir}/jax-wsCache/VerificarDocumentoPDFService"/>
         </wsimport>
@@ -50,5 +33,22 @@
         <delete dir="${build.generated.dir}/jax-wsCache/VerificarDocumentoPDFService"/>
         <delete dir="${build.generated.sources.dir}/jax-ws/com/isa/ws/services"/>
     </target>
-    <target name="wsimport-client-generate" depends="wsimport-client-objetoPdfService, wsimport-client-VerificarDocumentoPDFService"/>
+    <target name="wsimport-client-objetoPdfService" depends="wsimport-init">
+        <mkdir dir="${build.generated.dir}/jax-wsCache/objetoPdfService"/>
+        <property name="wsdl-objetoPdfService" location="xml-resources/web-service-references/objetoPdfService/wsdl/objetoPdfService.wsdl"/>
+        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/objetoPdfService" destdir="${build.generated.dir}/jax-wsCache/objetoPdfService" wsdl="${wsdl-objetoPdfService}" catalog="catalog.xml" encoding="${source.encoding}" extension="true" verbose="true" fork="false" wsdlLocation="file:/C:/Users/JMiraballes/Desktop/objetoPdfService.wsdl" xnocompile="true" xendorsed="true">
+            <depends file="${wsdl-objetoPdfService}"/>
+            <produces dir="${build.generated.dir}/jax-wsCache/objetoPdfService"/>
+        </wsimport>
+        <copy todir="${build.generated.sources.dir}/jax-ws">
+            <fileset dir="${build.generated.dir}/jax-wsCache/objetoPdfService">
+                <include name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="wsimport-client-clean-objetoPdfService" depends="-init-project">
+        <delete dir="${build.generated.dir}/jax-wsCache/objetoPdfService"/>
+        <delete dir="${build.generated.sources.dir}/jax-ws/py/gov/hacienda/digital/doc"/>
+    </target>
+    <target name="wsimport-client-generate" depends="wsimport-client-VerificarDocumentoPDFService, wsimport-client-objetoPdfService"/>
 </project>

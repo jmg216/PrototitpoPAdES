@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="DocumentoFirmaDigitalService" targetNamespace="http://doc.digital.hacienda.gov.py/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://doc.digital.hacienda.gov.py/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <wsdl:types>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://doc.digital.hacienda.gov.py/" xmlns:tns="http://doc.digital.hacienda.gov.py/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="guardarPdfFirmado" type="tns:guardarPdfFirmado"/>
+  <xs:element name="guardarPdfFirmadoResponse" type="tns:guardarPdfFirmadoResponse"/>
+  <xs:element name="obtenerPdf" type="tns:obtenerPdf"/>
+  <xs:element name="obtenerPdfResponse" type="tns:obtenerPdfResponse"/>
+  <xs:complexType name="guardarPdfFirmado">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="postFirmado" type="tns:documentoElectronico"/>
+      <xs:element minOccurs="0" name="cedulaFirmante" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="documentoElectronico">
+    <xs:sequence>
+      <xs:element name="objetoPdf" ns1:expectedContentTypes="application/pdf" type="xs:base64Binary" xmlns:ns1="http://www.w3.org/2005/05/xmlmime"/>
+      <xs:element maxOccurs="unbounded" name="parametros" type="xs:anyType"/>
+      <xs:element name="tipoDocumento" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="guardarPdfFirmadoResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="resultPdfFirmado" type="tns:resultOperacion"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="resultOperacion">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="codigo" type="xs:int"/>
+      <xs:element minOccurs="0" name="msg" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="obtenerPdf">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="tipoDocumento" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="listaParametros" type="tns:campoTipoValor"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="campoTipoValor">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="campo" type="xs:string"/>
+      <xs:element minOccurs="0" name="tipo" type="tns:tipoDato"/>
+      <xs:element minOccurs="0" name="valor" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="obtenerPdfResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="resultPdfParaFirma" type="tns:documentoElectronico"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="tipoDato">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="INTEGER"/>
+      <xs:enumeration value="LONG"/>
+      <xs:enumeration value="STRING"/>
+      <xs:enumeration value="DATE"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="WsException" type="tns:WsException"/>
+  <xs:complexType name="WsException">
+    <xs:sequence/>
+  </xs:complexType>
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="obtenerPdfResponse">
+    <wsdl:part element="tns:obtenerPdfResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="WsException">
+    <wsdl:part element="tns:WsException" name="WsException">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="guardarPdfFirmado">
+    <wsdl:part element="tns:guardarPdfFirmado" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="obtenerPdf">
+    <wsdl:part element="tns:obtenerPdf" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="guardarPdfFirmadoResponse">
+    <wsdl:part element="tns:guardarPdfFirmadoResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="DocumentoFirmaDigitalEndPoint">
+    <wsdl:operation name="guardarPdfFirmado">
+      <wsdl:input message="tns:guardarPdfFirmado" name="guardarPdfFirmado">
+    </wsdl:input>
+      <wsdl:output message="tns:guardarPdfFirmadoResponse" name="guardarPdfFirmadoResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:WsException" name="WsException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="obtenerPdf">
+      <wsdl:input message="tns:obtenerPdf" name="obtenerPdf">
+    </wsdl:input>
+      <wsdl:output message="tns:obtenerPdfResponse" name="obtenerPdfResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:WsException" name="WsException">
+    </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="DocumentoFirmaDigitalServiceSoapBinding" type="tns:DocumentoFirmaDigitalEndPoint">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="guardarPdfFirmado">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="guardarPdfFirmado">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="guardarPdfFirmadoResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="WsException">
+        <soap:fault name="WsException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="obtenerPdf">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="obtenerPdf">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="obtenerPdfResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="WsException">
+        <soap:fault name="WsException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="DocumentoFirmaDigitalService">
+    <wsdl:port binding="tns:DocumentoFirmaDigitalServiceSoapBinding" name="DocumentoFirmaDigitalEndPointPort">
+      <soap:address location="http://localhost:8080/doc/objetoPdfService"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

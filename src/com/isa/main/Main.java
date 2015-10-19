@@ -27,6 +27,7 @@ import com.isa.utiles.StreamDataSource;
 import com.isa.utiles.Utiles;
 import com.isa.utiles.UtilesMsg;
 import com.isa.utiles.UtilesResources;
+import com.isa.utiles.UtilesWS;
 import java.awt.CardLayout;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -35,6 +36,7 @@ import java.io.InputStream;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.activation.DataHandler;
@@ -58,6 +60,7 @@ public class Main extends javax.swing.JApplet implements ICommon{
     @Override
     public void init() {
         try{
+            System.out.println("Main::init");
             SecurityManager sm = new ISCertSecurityManager();
             System.setSecurityManager( sm );            
             /* Set the Nimbus look and feel */
@@ -83,30 +86,25 @@ public class Main extends javax.swing.JApplet implements ICommon{
             }
             //</editor-fold>
             initComponents();
+            ActualCertInfo.getInstance().inicializar();
             setFrontPanelSize();
             setPanels();
-            KeyStoreValidator.setInitStoreValidator();
-            
-//            UtilesResources.setRutaProperties("http://localhost:8080/ISCert/resources/hacienda/applet.properties");
-//            String cedula = "17706166";
-//            ActualCertInfo.getInstance().setCertIndex(2);
-            
+            KeyStoreValidator.setInitStoreValidator();            
             UtilesResources.setRutaProperties(getParameter("ruta"));
             String cedula = getParameter("cedula");
-            
             sincronizarTokens();
             ActualCertInfo.getInstance().setCedula(cedula);
             ManejadorPaneles.showPanel(LoginJPanel.class.getName());
         }
         catch( AppletException e ){
             //llamar a mensaje.
+            System.out.println("Init::Exception");
             ManejadorPaneles.showPanelMessageError( e.getMsj() );
         }
         
     }
     
     public boolean isValidar(){
-        
         if ( getParameter("validar") == null ){
             return true;
         }
@@ -129,25 +127,32 @@ public class Main extends javax.swing.JApplet implements ICommon{
         System.out.println("Metodo firmarPDF.");
         ActualCertInfo actualCertInfo = ActualCertInfo.getInstance();
         
-        if (actualCertInfo.getCertIndex() == -1){
-            ManejadorPaneles.showMessageCertList( UtilesMsg.ERROR_CERT_NO_SELECCIONADO );
+        if (Utiles.isNullOrEmpty(actualCertInfo.getPassword())){
+            firmaError(null, UtilesMsg.ERROR_PIN_VACIO);
+            return;
+        }
+        
+        if ((actualCertInfo.getCertIndex() == null) || (actualCertInfo.getCertIndex() < 0)){
+            firmaError(null, UtilesMsg.ERROR_CERT_NO_SELECCIONADO);
             return;            
         }
-        RequestPdfWS requestPdfWs = GsonHelper.getInstance().fromJsonToRequestPdfWS( json, ActualCertInfo.getInstance().getCedula() );
+        RequestPdfWS requestPdfWs = GsonHelper.getInstance().fromJsonToRequestPdfWS( json, ActualCertInfo.getInstance().getCedula());
         
         System.out.println("Post fromJson.");
         Thread thread = new Thread(){
             @Override
             public void run(){
+                DocumentoElectronico dElectronico = null;
                 try{
                     FirmaPDFController firmapdfcontroller = FirmaPDFController.getInstance();
                     RequestPdfWS requestPdfWs = GsonHelper.getInstance().fromJsonToRequestPdfWS( jsonClass, ActualCertInfo.getInstance().getCedula() );
-                    DocumentoElectronico dElectronico = firmapdfcontroller.obtenerPDFFromWS( requestPdfWs );
+                    System.out.println("JSON: " + jsonClass);
+                    printParametros( requestPdfWs );
+                    dElectronico = firmapdfcontroller.obtenerPDFFromWS( requestPdfWs );
                     PDFFirma infoFirma = firmapdfcontroller.generarApariencia();
                     
                     ByteArrayOutputStream pdfOS = firmapdfcontroller.firmar(infoFirma, dElectronico.getObjetoPdf().getInputStream());
                     InputStream pdfIS = new ByteArrayInputStream( pdfOS.toByteArray() );
-                    
                     
                     if (isValidar()){
                         ManejadorPaneles.showPanelProcesando(UtilesMsg.PROCESANDO_VALIDACION );
@@ -166,48 +171,52 @@ public class Main extends javax.swing.JApplet implements ICommon{
                     
                     if (resultOp != null){
                         switch( resultOp.getCodigo() ){
+                            case -2: ManejadorPaneles.showPanelMessageError( resultOp.getMsg() );
+                                     firmaError(dElectronico, resultOp.getMsg() );
+                                     break;
+                                
                             case -1: ManejadorPaneles.showPanelMessageError( UtilesMsg.ERROR_GUARDANDO_DOCUMENTO );
-                                     firmaError( resultOp.getMsg() );
+                                     firmaError(dElectronico, resultOp.getMsg() );
                                      break;
 
                             case 1: ManejadorPaneles.showPanelMessageInfo( UtilesMsg.DOCUMENTO_GUARDADO_OK );
                                     firmaExitosa( resultOp.getMsg() );
                                     break;
-
+                                
                             default:ManejadorPaneles.showPanelMessageError( UtilesMsg.ERROR_CODIGO_WS );
-                                    firmaError( UtilesMsg.ERROR_CODIGO_WS );
+                                    firmaError(dElectronico, UtilesMsg.ERROR_CODIGO_WS );
                                     break;
                         }
                     }
                     else{
                         ManejadorPaneles.showPanelMessageError( UtilesMsg.ERROR_CODIGO_WS );
-                        firmaError( UtilesMsg.ERROR_CODIGO_WS );                        
+                        firmaError(dElectronico, UtilesMsg.ERROR_CODIGO_WS );                        
                     }
                 }
                 catch (AppletException ex) {
                     Logger.getLogger(FirmaPDFController.class.getName()).log(Level.SEVERE, null, ex);
                     ManejadorPaneles.showPanelMessageError( ex.getMsj() );
-                    firmaError( ex.getMsj() );
+                    firmaError(dElectronico, ex.getMsj() );
                 }
                 catch (IOException ex) {
                     Logger.getLogger(FirmaPDFController.class.getName()).log(Level.SEVERE, null, ex);
                     ManejadorPaneles.showPanelMessageError( UtilesMsg.ERROR_ACCEDIENDO_ARCHIVO );
-                    firmaError( UtilesMsg.ERROR_ACCEDIENDO_ARCHIVO );
+                    firmaError(dElectronico, UtilesMsg.ERROR_ACCEDIENDO_ARCHIVO );
                 }
                 catch (KeyStoreException ex) {
                     Logger.getLogger(FirmaPDFController.class.getName()).log(Level.SEVERE, null, ex);
                     ManejadorPaneles.showPanelMessageError( UtilesMsg.ERROR_FIRMANDO_DOCUMENTO );
-                    firmaError( UtilesMsg.ERROR_FIRMANDO_DOCUMENTO );
+                    firmaError(dElectronico, UtilesMsg.ERROR_FIRMANDO_DOCUMENTO );
                 }
                 catch (NoSuchAlgorithmException ex) {
                     Logger.getLogger(FirmaPDFController.class.getName()).log(Level.SEVERE, null, ex);
                     ManejadorPaneles.showPanelMessageError( UtilesMsg.ERROR_FIRMANDO_DOCUMENTO );
-                    firmaError( UtilesMsg.ERROR_FIRMANDO_DOCUMENTO );
+                    firmaError(dElectronico, UtilesMsg.ERROR_FIRMANDO_DOCUMENTO );
                 }
                 catch (UnrecoverableKeyException ex) {
                     Logger.getLogger(FirmaPDFController.class.getName()).log(Level.SEVERE, null, ex);
                     ManejadorPaneles.showPanelMessageError( UtilesMsg.ERROR_FIRMANDO_DOCUMENTO );
-                    firmaError( UtilesMsg.ERROR_FIRMANDO_DOCUMENTO );
+                    firmaError(dElectronico, UtilesMsg.ERROR_FIRMANDO_DOCUMENTO );
                 }
             }
         };
@@ -217,11 +226,30 @@ public class Main extends javax.swing.JApplet implements ICommon{
         String anio = requestPdfWs.getParametroExtraValue(RequestPdfWS.ANIO);
         String solnumero = requestPdfWs.getParametroExtraValue(RequestPdfWS.SOLNUMERO);
         ManejadorPaneles.showPanelProcesando(UtilesMsg.PROCESANDO_FIRMA, tipoDocumento , solnumero, anio);
-        
     }
     
+    private void printParametros(RequestPdfWS requestPdfWs){
+        if (requestPdfWs != null){
+            
+            System.out.println("Cedula: " + requestPdfWs.getCedula());
+            System.out.println("Tipo Documento: " + requestPdfWs.getParametroValue("tipoDocumento"));
+            System.out.println("Solicitud: " + requestPdfWs.getParametroExtraValue("solNumero"));
+            System.out.println("Anio: " + requestPdfWs.getParametroExtraValue("anio"));
+        }
+    }
     
-    private void firmaError(String msg){
+    private void firmaError(DocumentoElectronico delectronico, String msg){
+        System.out.println("firmaError::init");
+        if (delectronico != null){
+            delectronico.setObjetoPdf(null);
+            try {
+                System.out.println("QUITANDO RESERVA: " + delectronico.getTipoDocumento());
+                UtilesWS.getInstancePortWS().quitarReserva(delectronico);
+            } catch (AppletException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                msg = ex.getMsj();
+            }
+        }
         JSObject win = (JSObject) JSObject.getWindow(this);
         win.call("firmaError", new String[]{  msg });        
     }

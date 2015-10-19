@@ -23,32 +23,37 @@
   </xs:complexType>
   <xs:complexType name="signature">
     <xs:sequence>
+      <xs:element minOccurs="0" name="cn" type="xs:string"/>
       <xs:element minOccurs="0" name="fecha" type="xs:dateTime"/>
-      <xs:element minOccurs="0" name="singer" type="xs:string"/>
       <xs:element name="verify" type="xs:boolean"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="validarDocumentoByParams">
     <xs:sequence>
       <xs:element minOccurs="0" name="arg0" type="xs:string"/>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="arg1" type="tns:campoTipoValor"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="arg1" type="tns:campoTipoValorTx"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="campoTipoValor">
+  <xs:complexType name="campoTipoValorTx">
     <xs:sequence>
       <xs:element minOccurs="0" name="campo" type="xs:string"/>
-      <xs:element minOccurs="0" name="tipo" type="tns:tipoDato"/>
+      <xs:element minOccurs="0" name="tipo" type="tns:tipoDatoTx"/>
       <xs:element minOccurs="0" name="valor" type="xs:string"/>
     </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="tipoDato">
-    <xs:sequence/>
   </xs:complexType>
   <xs:complexType name="validarDocumentoByParamsResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:verifyResponse"/>
     </xs:sequence>
   </xs:complexType>
+  <xs:simpleType name="tipoDatoTx">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="INTEGER"/>
+      <xs:enumeration value="LONG"/>
+      <xs:enumeration value="STRING"/>
+      <xs:enumeration value="DATE"/>
+    </xs:restriction>
+  </xs:simpleType>
   <xs:element name="WService_TXException" type="tns:WService_TXException"/>
   <xs:complexType name="WService_TXException">
     <xs:sequence>

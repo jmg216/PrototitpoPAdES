@@ -17,6 +17,7 @@ public class UtilesMsg {
     public static String PENDIENTE = "Usted no tiene ningún certificado instalado.";
     public static String ERROR_FIRMAR_DOC = "Ha ocurrido un error y no se ha podido firmar el documento.";
     public static String ERROR_PIN_INCORRECTO = "El pin no es correcto.";
+    public static String ERROR_PIN_VACIO = "Debe ingresar el pin del token.";
     public static String ERROR_TOKEN_BLOQUEADO = "El token se ha bloquedo.";
     public static String ERROR_TOKEN_SIN_IDENTIFICAR = "No se puede identificar el token.";
     public static String FIRMA_VERIFICADA_OK = "Firma/s validada/s correctamente.";
@@ -26,6 +27,7 @@ public class UtilesMsg {
     public static String ERROR_CARGANDO_CERTIFICADOS = "Error cargando certificados.";
     public static String ERROR_VERIFICANDO_FIRMA = "Ha ocurrido un error y no se ha podido verificar la firma.";
     public static String ERROR_AUTH = "Ha ocurrido un error en la autenticación"; 
+    public static String ERROR_URL_WS = "Error al conectarse a: ";
     
     public static String ERROR_ACCEDIENDO_ARCHIVO = "Ha ocurrido un error accediendo a los archivos de configuración";
     public static String ERROR_ACCEDIENDO_TOKEN = "No se ha podido obtener la información del token.";
@@ -40,4 +42,5 @@ public class UtilesMsg {
     public static String DOCUMENTO_GUARDADO_OK = "Documento guardado correctamente.";
     public static String DOCUMENTO_FIRMADO_GUARDADO_OK = "Documento guardado y firmado correctamente.";
     public static String ERROR_CONEXION_WEB_SERVICES = "Ocurrió un error de conexión con los servicios web.";
+    public static String ERROR_PARSING_CALENDAR = "Error generando fecha actual.";
 }

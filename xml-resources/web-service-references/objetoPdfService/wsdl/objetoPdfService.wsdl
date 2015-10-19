@@ -8,17 +8,27 @@
   <xs:element name="obtenerPdfParaFirmaResponse" type="tns:obtenerPdfParaFirmaResponse"/>
   <xs:element name="obtenerPdfParaValidar" type="tns:obtenerPdfParaValidar"/>
   <xs:element name="obtenerPdfParaValidarResponse" type="tns:obtenerPdfParaValidarResponse"/>
+  <xs:element name="quitarReserva" type="tns:quitarReserva"/>
+  <xs:element name="quitarReservaResponse" type="tns:quitarReservaResponse"/>
   <xs:complexType name="guardarPdfFirmado">
     <xs:sequence>
       <xs:element minOccurs="0" name="postFirmado" type="tns:documentoElectronico"/>
       <xs:element minOccurs="0" name="cedulaFirmante" type="xs:string"/>
+      <xs:element minOccurs="0" name="fechaFirmaCliente" type="xs:dateTime"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="documentoElectronico">
     <xs:sequence>
       <xs:element name="objetoPdf" ns1:expectedContentTypes="application/pdf" type="xs:base64Binary" xmlns:ns1="http://www.w3.org/2005/05/xmlmime"/>
-      <xs:element maxOccurs="unbounded" name="parametros" type="xs:anyType"/>
+      <xs:element maxOccurs="unbounded" name="parametros" type="tns:campoTipoValor"/>
       <xs:element name="tipoDocumento" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="campoTipoValor">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="campo" type="xs:string"/>
+      <xs:element minOccurs="0" name="tipo" type="tns:tipoDato"/>
+      <xs:element minOccurs="0" name="valor" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="guardarPdfFirmadoResponse">
@@ -32,17 +42,18 @@
       <xs:element minOccurs="0" name="msg" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
+  <xs:complexType name="quitarReserva">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="tns:documentoElectronico"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="quitarReservaResponse">
+    <xs:sequence/>
+  </xs:complexType>
   <xs:complexType name="obtenerPdfParaValidar">
     <xs:sequence>
       <xs:element minOccurs="0" name="tipoDocumento" type="xs:string"/>
       <xs:element maxOccurs="unbounded" minOccurs="0" name="listaParametros" type="tns:campoTipoValor"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="campoTipoValor">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="campo" type="xs:string"/>
-      <xs:element minOccurs="0" name="tipo" type="tns:tipoDato"/>
-      <xs:element minOccurs="0" name="valor" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="obtenerPdfParaValidarResponse">
@@ -80,6 +91,14 @@
     <wsdl:part element="tns:obtenerPdfParaValidar" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="quitarReserva">
+    <wsdl:part element="tns:quitarReserva" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="quitarReservaResponse">
+    <wsdl:part element="tns:quitarReservaResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="obtenerPdfParaValidarResponse">
     <wsdl:part element="tns:obtenerPdfParaValidarResponse" name="parameters">
     </wsdl:part>
@@ -113,6 +132,12 @@
       <wsdl:fault message="tns:WsException" name="WsException">
     </wsdl:fault>
     </wsdl:operation>
+    <wsdl:operation name="quitarReserva">
+      <wsdl:input message="tns:quitarReserva" name="quitarReserva">
+    </wsdl:input>
+      <wsdl:output message="tns:quitarReservaResponse" name="quitarReservaResponse">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="obtenerPdfParaValidar">
       <wsdl:input message="tns:obtenerPdfParaValidar" name="obtenerPdfParaValidar">
     </wsdl:input>
@@ -144,6 +169,15 @@
         <soap:fault name="WsException" use="literal"/>
       </wsdl:fault>
     </wsdl:operation>
+    <wsdl:operation name="quitarReserva">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="quitarReserva">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="quitarReservaResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="obtenerPdfParaValidar">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="obtenerPdfParaValidar">
@@ -171,7 +205,7 @@
   </wsdl:binding>
   <wsdl:service name="DocumentoFirmaDigitalService">
     <wsdl:port binding="tns:DocumentoFirmaDigitalServiceSoapBinding" name="DocumentoFirmaDigitalEndPointPort">
-      <soap:address location="http://localhost:8080/doc/objetoPdfService"/>
+      <soap:address location="http://10.20.0.3:6060/doc/objetoPdfService"/>
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>
