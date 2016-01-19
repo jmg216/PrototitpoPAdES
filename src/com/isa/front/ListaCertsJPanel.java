@@ -26,6 +26,7 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -171,7 +172,18 @@ public class ListaCertsJPanel extends javax.swing.JPanel implements ICommon{
                 
                 //SubjectDN Name: GIVENNAME=WALTER, SURNAME=SUAREZ, SERIALNUMBER=CI 17706166, CN=WALTER SUAREZ AUTENTICACION, OU=PERSONA FISICA, O=WALTER SUAREZ, C=PY
                 String docID = Utiles.getDocIDSerialNumber( c.getSubjectDN().getName() );
-                if ( cedulaUser.equals( docID ) ){
+                Date fechaVencimiento = c.getNotAfter();
+                Date fechaInicio = c.getNotBefore();
+                Date fechaActual = new Date();
+                
+                System.out.println( "fechaVencimiento: " + fechaVencimiento );
+                System.out.println( "fechaInicio: " + fechaInicio );
+                System.out.println( "fechaActual: " + fechaActual );
+                
+                System.out.println( "Post: " + fechaActual.after(fechaInicio) );
+                System.out.println( "Ant: " + fechaActual.before(fechaVencimiento) );
+                
+                if ( cedulaUser.equals( docID ) && fechaActual.after(fechaInicio) && fechaActual.before(fechaVencimiento) ){
                     String fecha = Utiles.DATE_FORMAT_MIN.format(c.getNotBefore()) + "-" + Utiles.DATE_FORMAT_MIN.format(c.getNotAfter());
                     String [] elem = new String [] { Utiles.getCN(c.getSubjectDN().getName()), Utiles.getCN(c.getIssuerDN().getName()), fecha };
                     certs.put(String.valueOf(certs.size()), c);
