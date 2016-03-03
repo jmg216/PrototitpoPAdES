@@ -179,7 +179,7 @@ public class ListaCertsJPanel extends javax.swing.JPanel implements ICommon{
                 System.out.println( "fechaVencimiento: " + fechaVencimiento );
                 System.out.println( "fechaInicio: " + fechaInicio );
                 System.out.println( "fechaActual: " + fechaActual );
-                
+                System.out.println( "Alias: " + alias );
                 System.out.println( "Post: " + fechaActual.after(fechaInicio) );
                 System.out.println( "Ant: " + fechaActual.before(fechaVencimiento) );
                 

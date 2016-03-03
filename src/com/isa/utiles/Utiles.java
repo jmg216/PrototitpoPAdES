@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.MessageDigest;
@@ -143,16 +144,16 @@ public class Utiles {
     }    
     
     public static String getDocIDSerialNumber( String dn ){
-            
-        String ciUserCert = Utiles.getCI( dn );
+        
         String cieUserCert = Utiles.getCIE( dn );
+        String ciUserCert = Utiles.getCI( dn );
         String pspUserCert = Utiles.getPSP( dn );
         
-        if (!Utiles.isNullOrEmpty(ciUserCert)){
-            return ciUserCert;
-        }
-        else if (!Utiles.isNullOrEmpty(cieUserCert)){
+        if (!Utiles.isNullOrEmpty(cieUserCert)){
             return cieUserCert;
+        }        
+        else if (!Utiles.isNullOrEmpty(ciUserCert)){
+            return ciUserCert;
         }
         else if (!Utiles.isNullOrEmpty(pspUserCert)){
             return pspUserCert;
@@ -409,4 +410,21 @@ public class Utiles {
         
         return m;
     }
+    
+    /**
+     * Método que re codifica la cadena pasada por par�metro, a UTF-8.
+     *
+     * @param str */
+    public static String encodingString(String str) {
+        try{
+            return new String(str.getBytes("ISO-8859-1"), "UTF-8");
+        }
+        catch (UnsupportedEncodingException e){
+            e.printStackTrace();
+        }
+        return str;
+    }
+    
+    
+    
 }

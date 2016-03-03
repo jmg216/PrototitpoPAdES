@@ -35,6 +35,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import java.security.GeneralSecurityException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -171,7 +173,10 @@ public class FirmaPDFController {
                 int[] coords = infoFirma.calcularCorrdenadasFirma( cantidadFirmaActuales,  infoFirma.getAncho(), infoFirma.getLargo() );
                 
                 //llx, lly, urx, ury
-                appearance.setLayer2Text(infoFirma.getFirmante());
+                String v = Utiles.encodingString(infoFirma.getFirmante());
+                System.out.println("Post encoding: " + v);
+                appearance.setLayer2Text( v );
+                //appearance.setLayer2Text(  infoFirma.getFirmante() );
                 appearance.setVisibleSignature(new Rectangle(coords[0], coords[1], coords[2], coords[3]), numeroPagFirma, "Id: " + IdGenerator.generate());
             }
             
